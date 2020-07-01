@@ -9,7 +9,9 @@
     "start": "NODE_ENV=production pm2 start dist",
     "prestart": "npm run -s build",
     "lint": "eslint src",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "frontend": "cd frontend && npm start",
+    "fullstack": "concurrently -n 'REST API Server, FrontEnd' -c 'blue,green' \"npm run dev\" \"npm run frontend\""
   },
   "eslintConfig": {
     "parserOptions": {
@@ -27,7 +29,9 @@
   "author": "Agoo Clinton",
   "license": "MIT",
   "dependencies": {
+    "axios": "^0.19.2",
     "body-parser": "^1.19.0",
+    "concurrently": "^5.2.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-jwt": "^6.0.0",
