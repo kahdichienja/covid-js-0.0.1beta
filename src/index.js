@@ -2,6 +2,7 @@ import http from 'http'
 import express from 'express'
 import bodyParser from 'body-parser'
 import mongoose from 'mongoose'
+import morgan from 'morgan'
 
 import config from './config'
 import routes from './routes'
@@ -13,6 +14,7 @@ app.server = http.createServer(app)
 
 
 // middleware
+app.use(morgan("dev"))
 // parse application/json
 app.use(bodyParser.json({
     limit: config.bodyLimit

@@ -12,6 +12,8 @@ export default({ config, db }) => {
         let newRest = new Restaurant()  
         
         newRest.name = await req.body.name
+        /* test */
+        newRest.user = await req.body.user
 
         await newRest.save(err => {
             if (err) {
@@ -59,7 +61,7 @@ export default({ config, db }) => {
 
     //'v1/restaurant/:id --Delete
     api.delete('/:id', async (req, res) => {
-        await Restaurant.remove({
+        await Restaurant.deleteOne({
             _id: req.params.id
         }, (err, restaurant) => {
             if (err) {
