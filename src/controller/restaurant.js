@@ -3,24 +3,37 @@ import { Router } from 'express'
 import Restaurant from '../model/restaurant'
 
 
-export default({ config, db }) => {
+export default ({ config, db }) => {
     let api = Router()
 
     // 'v1/restaurant/add --create
 
     api.post('/add', async (req, res) => {
-        let newRest = new Restaurant()  
-        
-        newRest.name = await req.body.name
-        /* test */
-        newRest.user = await req.body.user
+        try {
+            const { name, user } = req.body
+            const newRest = await Restaurant.create(req.body)
 
-        await newRest.save(err => {
-            if (err) {
-                res.send(err)
+
+            return res.status(201).json({
+                success: true,
+                data: newRest,
+                message: "restaurant saved successfully"
+            })
+
+        } catch (err) {
+            if (err.name === 'ValidationError') {
+                const msg = Object.values(err.errors).map(val => val.message)
+                return res.status(400).json({
+                    success: false,
+                    error: msg
+                })
+            }else{
+                return res.status(500).json({
+                    success: false,
+                    error: 'Server Error'
+                })
             }
-            res.json({ message: "restaurant saved successfully" })
-        })
+        }
     })
 
     //  'v1/restaurant/ --Read
@@ -28,8 +41,12 @@ export default({ config, db }) => {
         await Restaurant.find({}, (err, restaurants) => {
             if (err) {
                 res.send(err)
-            }            
-            res.json(restaurants)
+            }
+            res.json({
+                success: true,
+                count: restaurants.length,
+                data: restaurants
+            })
         })
     })
 
@@ -39,13 +56,17 @@ export default({ config, db }) => {
             if (err) {
                 res.send(err)
             }
-            res.json(restaurant)
+            res.json({
+                success: true,
+                count: restaurant.length,
+                data: restaurant
+            })
         })
     })
 
     //'v1/restaurant/:id --update 
     api.put('/:id', async (req, res) => {
-        await Restaurant.findById(req.params.id, (err, restaurant) =>{
+        await Restaurant.findById(req.params.id, (err, restaurant) => {
             if (err) {
                 res.send(err)
             }

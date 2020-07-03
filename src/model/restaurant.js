@@ -7,9 +7,9 @@ let restaurantSchema = new Schema({
     name: String, 
     /* test*/
     user: {
-        type: Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: true
+        required: [true, "name is required"]
     }
 })
 

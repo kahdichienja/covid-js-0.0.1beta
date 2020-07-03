@@ -26,6 +26,7 @@ app.use('/v1', routes)
 
 
 app.server.listen(config.port)
+
 console.log(`Server Started On Port ${app.server.address().port}`)
 
 export default app
